@@ -1,0 +1,650 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>MainModelMakerPublish</title><meta name="generator" content="MATLAB 8.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2015-05-20"><meta name="DC.source" content="MainModelMakerPublish.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">List the pathways or reactions to be considered:</a></li><li><a href="#2">Recursively obtain the list of reactions</a></li><li><a href="#3">Obtain reaction information for every reaction</a></li><li><a href="#4">Add your own reactions</a></li><li><a href="#5">Prepare Input variables</a></li><li><a href="#6">Modify the model as suitable for your purpose</a></li><li><a href="#7">Prepare Flux Distribution</a></li><li><a href="#8">Remove Rxns Without Flux</a></li><li><a href="#9">Remove Metabolites Without Rxns</a></li><li><a href="#10">Specify Inlet Rxns</a></li><li><a href="#11">Specify Outlet Rxns</a></li></ul></div><h2>List the pathways or reactions to be considered:<a name="1"></a></h2><pre class="codeinput">Pathways = {
+    <span class="string">'GLYCOLYSIS-TCA-GLYOX-BYPASS'</span>;
+    <span class="string">'MALIC-NADP-RXN'</span>;
+    <span class="string">'PEPCARBOX-RXN'</span>;
+    <span class="string">'PENTOSE-P-PWY'</span>;
+    <span class="string">'GLUTSYNIII-PWY'</span>;
+    <span class="string">'GLNSYN-PWY'</span>;
+    <span class="string">'PWY0-781'</span>;
+    <span class="string">'ASPARAGINESYN-PWY'</span>;
+    <span class="string">'PROSYN-PWY'</span>;
+    <span class="string">'SER-GLYSYN-PWY'</span>;
+    <span class="string">'CYSTSYN-PWY'</span>;
+    <span class="string">'BRANCHED-CHAIN-AA-SYN-PWY'</span>;
+    <span class="string">'VALINE-PYRUVATE-AMINOTRANSFER-RXN'</span>;
+    <span class="string">'PWY0-661'</span>;
+    <span class="string">'PWY0-662'</span>;
+    <span class="string">'PWY0-162'</span>;
+    <span class="string">'HISTSYN-PWY'</span>;
+    <span class="string">'PWY-6123'</span>;
+    <span class="string">'PWY-6122'</span>;
+    <span class="string">'PWY-7221'</span>;
+    <span class="string">'PWY-7219'</span>;
+    <span class="string">'COMPLETE-ARO-PWY'</span>;
+    <span class="string">'ARGSYN-PWY'</span>;
+    <span class="string">'NADPHOS-DEPHOS-PWY'</span>;
+    <span class="string">'FERMENTATION-PWY'</span>;
+    <span class="string">'RXN-8899'</span>;
+    };
+</pre><h2>Recursively obtain the list of reactions<a name="2"></a></h2><pre class="codeinput">Rxns = {};
+PathwayNames = {};
+Rxn2Pathway = [];
+<span class="keyword">for</span> n=1:length(Pathways),
+    [PathwayNames{n}, SubRxns] = ParsePathway(Pathways{n});
+    <span class="keyword">if</span> ~isempty(SubRxns),
+        Rxns = [Rxns; SubRxns];
+        Rxn2Pathway = [Rxn2Pathway; n.*ones(length(SubRxns),1)];
+    <span class="keyword">else</span>
+        Rxns = [Rxns; Pathways{n}];
+        PathwayNames{n} = <span class="string">''</span>;
+        Rxn2Pathway = [Rxn2Pathway; n];
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+[Rxns, ind,~] = unique(Rxns);
+Rxn2Pathway = Rxn2Pathway(ind);
+</pre><h2>Obtain reaction information for every reaction<a name="3"></a></h2><pre class="codeinput">Reactions = repmat(ReactionInformation, length(Rxns),1);
+Metabolites = {};
+<span class="keyword">for</span>  n=1:length(Rxns),
+    [ Reactions(n).dG0, Reactions(n).Reversible, Reactions(n).Metabolites, Reactions(n).Stoichiometry, <span class="keyword">...</span>
+        Reactions(n).EnzymeNames, Reactions(n).Regulators, Reactions(n).RegulationType, Reactions(n).CommonName ] = ReactionInfo( Rxns{n} );
+    Reactions(n).Pathway = PathwayNames{Rxn2Pathway(n)};
+    Metabolites = [Metabolites; Reactions(n).Metabolites];
+<span class="keyword">end</span>
+Metabolites = unique(Metabolites);
+</pre><h2>Add your own reactions<a name="4"></a></h2><pre class="codeinput"><span class="comment">%Add PTS reaction</span>
+Reactions(end+1).Reversible = 0;
+Reactions(end).Metabolites = {<span class="string">'PHOSPHO-ENOL-PYRUVATE'</span>;<span class="string">'GLC-6-P'</span>; <span class="string">'PYRUVATE'</span>};
+Reactions(end).Stoichiometry = [-1; 1; 1];
+Reactions(end).EnzymeNames = {<span class="string">'PTS'</span>};
+Reactions(end).CommonName = <span class="string">'PTS'</span>;
+Rxns = [Rxns; <span class="string">'PTS'</span>];
+
+<span class="comment">%Add glk reaction</span>
+Reactions(end+1).Reversible = 0;
+Reactions(end).Metabolites = {<span class="string">'ATP'</span>;<span class="string">'GLC-6-P'</span>; <span class="string">'ADP'</span>};
+Reactions(end).Stoichiometry = [-1; 1; 1];
+Reactions(end).EnzymeNames = {<span class="string">'glk'</span>};
+Reactions(end).CommonName = <span class="string">'glk'</span>;
+Rxns = [Rxns; <span class="string">'glk'</span>];
+
+<span class="comment">%Add Ethanol transport reaction</span>
+Reactions(end+1).Reversible = 0;
+Reactions(end).Metabolites = {<span class="string">'ETOH'</span>};
+Reactions(end).Stoichiometry = [-1];
+Reactions(end).EnzymeNames = {<span class="string">'EtOH_out'</span>};
+Reactions(end).CommonName = <span class="string">'Ethanol Output'</span>;
+Rxns = [Rxns; <span class="string">'EtOH_out'</span>];
+
+<span class="comment">%Add Acetate transport reaction</span>
+Reactions(end+1).Reversible = 0;
+Reactions(end).Metabolites = {<span class="string">'ACET'</span>};
+Reactions(end).Stoichiometry = [-1];
+Reactions(end).EnzymeNames = {<span class="string">'Acetate_out'</span>};
+Reactions(end).CommonName = <span class="string">'Acetate Output'</span>;
+Rxns = [Rxns; <span class="string">'Acetate_out'</span>];
+
+<span class="comment">%Add Lactate transport reaction</span>
+Reactions(end+1).Reversible = 0;
+Reactions(end).Metabolites = {<span class="string">'D-LACTATE'</span>};
+Reactions(end).Stoichiometry = [-1];
+Reactions(end).EnzymeNames = {<span class="string">'Lactate_out'</span>};
+Reactions(end).CommonName = <span class="string">'Lactate Output'</span>;
+Rxns = [Rxns; <span class="string">'Lactate_out'</span>];
+
+<span class="comment">%Respiration</span>
+Reactions(end+1).Reversible = 0;
+Reactions(end).Metabolites = {<span class="string">'NADH'</span>; <span class="string">'ADP'</span>; <span class="string">'NAD'</span>; <span class="string">'ATP'</span>};
+Reactions(end).Stoichiometry = [-1; -2.5; 1; 2.5];
+Reactions(end).EnzymeNames = {<span class="string">'CollapsedRespiration'</span>};
+Reactions(end).CommonName = <span class="string">'Summarized Respiration'</span>;
+Rxns = [Rxns; <span class="string">'CollapsedRespiration'</span>];
+
+
+
+<span class="comment">%Independent Outlet For Biomass: From Feist et al. 2007</span>
+BiomassComponents = {{<span class="string">'GLT'</span>}; {<span class="string">'GLN'</span>}; {<span class="string">'L-ASPARTATE'</span>}; {<span class="string">'ASN'</span>}; {<span class="string">'PRO'</span>}; {<span class="string">'SER'</span>}; {<span class="string">'GLY'</span>}; {<span class="string">'CYS'</span>}; {<span class="string">'LEU'</span>}; {<span class="string">'VAL'</span>}; {<span class="string">'L-ALPHA-ALANINE'</span>}; <span class="keyword">...</span>
+    {<span class="string">'THR'</span>}; {<span class="string">'ILE'</span>}; {<span class="string">'HIS'</span>}; {<span class="string">'MET'</span>}; {<span class="string">'LYS'</span>}; {<span class="string">'TYR'</span>}; {<span class="string">'PHE'</span>}; {<span class="string">'TRP'</span>}; {<span class="string">'ARG'</span>}; {<span class="string">'UTP'</span>}; {<span class="string">'CTP'</span>}; {<span class="string">'GTP'</span>}; {<span class="string">'ATP'</span>}; {<span class="string">'NAD'</span>}; {<span class="string">'NADP'</span>}};
+Coefficients = [-0.263; -0.263;-0.241;-0.241;-0.221;-0.216;-0.612;-0.092;-0.451;-0.423;-0.514;-0.254;-0.291;-0.095;-0.154;-0.343;-0.138;-0.185;-0.057;-0.296;-0.144;-0.134;-0.215;-0.174;-0.001831;-0.000447;];
+<span class="keyword">for</span> n=1:length(BiomassComponents),
+    Reactions(end+1).Reversible = 0;
+    Reactions(end).Metabolites = {BiomassComponents{n}};
+    Reactions(end).Stoichiometry = [Coefficients(n)];
+    Reactions(end).EnzymeNames = {strcat(<span class="string">'Biomass'</span>, num2str(n))};
+    Reactions(end).CommonName = strjoin(BiomassComponents{n}, <span class="string">'to Biomass'</span>);
+    Reactions(end).Pathway = <span class="string">'Biomass Output Reactions'</span>;
+    Rxns = [Rxns; strcat(<span class="string">'Biomass'</span>, num2str(n))];
+<span class="keyword">end</span>
+</pre><h2>Prepare Input variables<a name="5"></a></h2><pre class="codeinput">S = [];
+Sreg = [];
+Reversibilities = [];
+EnzymeNames = Rxns;
+<span class="keyword">for</span> n=1:length(Reactions),
+    S = [S zeros(length(Metabolites),1)];
+    Sreg = [Sreg zeros(length(Metabolites),1)];
+    Reversibilities = [Reversibilities; Reactions(n).Reversible];
+    <span class="keyword">for</span> m=1:length(Reactions(n).Metabolites),
+        S((strcmp(Reactions(n).Metabolites{m}, Metabolites)),end) = Reactions(n).Stoichiometry(m);
+    <span class="keyword">end</span>
+    <span class="keyword">for</span> nn=1:length(Reactions(n).EnzymeNames),
+        <span class="keyword">for</span> m=1:length(Reactions(n).Regulators{nn}),
+            Sreg((strcmp(Reactions(n).Regulators{nn}{m}, Metabolites)),end) = Reactions(n).RegulationType{nn}(m);
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+
+<span class="keyword">end</span>
+
+Net.S = S;
+Net.Sreg = Sreg;
+Net.MetabName = Metabolites;
+Net.EnzName = EnzymeNames;
+</pre><h2>Modify the model as suitable for your purpose<a name="6"></a></h2><pre class="codeinput"><span class="comment">%For simplicity, quinones can be represented as 1.5 ATP</span>
+<span class="comment">%For simplicity, thioredoxin can be substituted by NADPH</span>
+<span class="comment">%For simplicity NAD-P-OR-NOP choose NADP. Later this could be expanded to use both substrates</span>
+Substitutions = {{1} {<span class="string">'|Menaquinones|'</span>} {<span class="string">'='</span>} {1.5} {<span class="string">'ADP'</span>}; <span class="keyword">...</span>
+                 {1} {<span class="string">'|Menaquinols|'</span>} {<span class="string">'='</span>} {1.5} {<span class="string">'ATP'</span>}; <span class="keyword">...</span>
+                 <span class="comment">%{1} {'|Oxidized-NrdH-Proteins|'} {'='} {1.5} {'ADP'}; ...</span>
+                 <span class="comment">%{1} {'|Reduced-NrdH-Proteins|'} {'='} {1.5} {'ATP'}; ...</span>
+                 <span class="comment">%{1} {'|Oxidized-flavodoxins|'} {'='} {1.5} {'ADP'}; ...</span>
+                 <span class="comment">%{1} {'|Reduced-flavodoxins|'} {'='} {1.5} {'ATP'}; ...</span>
+                 {1} {<span class="string">'|Quinones|'</span>} {<span class="string">'='</span>} {1.5} {<span class="string">'ADP'</span>}; <span class="keyword">...</span>
+                 {1} {<span class="string">'|Reduced-Quinones|'</span>} {<span class="string">'='</span>} {1.5} {<span class="string">'ATP'</span>}; <span class="keyword">...</span>
+                 {1} {<span class="string">'|Ubiquinones|'</span>} {<span class="string">'='</span>} {1.5} {<span class="string">'ADP'</span>}; <span class="keyword">...</span>
+                 {1} {<span class="string">'|Ubiquinols|'</span>} {<span class="string">'='</span>} {1.5} {<span class="string">'ATP'</span>}; <span class="keyword">...</span>
+                 <span class="comment">%{1} {'|Ox-Thioredoxin|'} {'='} {1.5} {'NADP'}; ...</span>
+                 <span class="comment">%{1} {'|Red-Thioredoxin|'} {'='} {1.5} {'NADPH'}; ...</span>
+                 {1} {<span class="string">'NAD-P-OR-NOP'</span>} {<span class="string">'='</span>} {1} {<span class="string">'NADP'</span>}; <span class="keyword">...</span>
+                 {1} {<span class="string">'NADH-P-OR-NOP'</span>} {<span class="string">'='</span>} {1} {<span class="string">'NADPH'</span>}; <span class="keyword">...</span>
+<span class="comment">%                  {1} {'|Acceptor|'} {'='} {1} {'NADP'}; ...</span>
+<span class="comment">%                  {1} {'|Donor-H2|'} {'='} {1} {'NADPH'}; ...</span>
+                 };
+<span class="keyword">for</span> n=1:size(Substitutions,1),
+    Met1 = find(strcmp(Substitutions{n,2}, Net.MetabName));
+    Met2 = find(strcmp(Substitutions{n,5}, Net.MetabName));
+    Net.S(Met2,:) = Net.S(Met2,:)+(Substitutions{n,4}{1}/Substitutions{n,1}{1}).*Net.S(Met1,:);
+    Net.S(Met1,:) = [];
+    Net.Sreg(Met1,:) = [];
+    Net.MetabName(Met1) = [];
+<span class="keyword">end</span>
+
+
+<span class="comment">%Remove negligible metabolites</span>
+VetoedClasses = {<span class="string">'Cofactors'</span>;
+                 <span class="string">'Vitamins'</span>;
+                 <span class="string">'Ions'</span>;
+                 <span class="string">'Salts'</span>;
+                 <span class="string">'Inorganic-Compounds'</span>;
+                 <span class="string">'THF-Derivatives'</span>;
+                 };
+NegligibleMetabolites = [];
+<span class="keyword">for</span> n=1:length(Net.MetabName),
+    [BadClass, CarbonCount, NitrogenCount] = CompoundChecker(strrep(Net.MetabName{n}, <span class="string">'|'</span>, <span class="string">''</span>), VetoedClasses); <span class="comment">% There seems to be an incosistency in the database where -GLU-N does not appear in compounds</span>
+    <span class="keyword">if</span> BadClass==1 || CarbonCount==0 || (CarbonCount==1&amp;&amp;NitrogenCount==0),
+        NegligibleMetabolites = [NegligibleMetabolites; n];
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+Net.S(NegligibleMetabolites,:) = [];
+Net.MetabName(NegligibleMetabolites) = [];
+Net.Sreg(NegligibleMetabolites,:) = [];
+
+<span class="comment">% Remove empty or repeated rxns</span>
+EmptyRxns =  find(sum(abs(Net.S),1) == 0);
+Net.S(:,EmptyRxns) = [];
+Net.Sreg(:,EmptyRxns) = [];
+Net.EnzName(EmptyRxns) = [];
+Reactions(EmptyRxns) = [];
+Reversibilities(EmptyRxns) = [];
+[~, Unq, ~] = unique(Net.S', <span class="string">'rows'</span>);
+RptRxns = logical(ones(size(Net.S,2),1));
+RptRxns(Unq) = 0;
+Net.S(:,RptRxns) = [];
+Net.Sreg(:,RptRxns) = [];
+Net.EnzName(RptRxns) = [];
+Reversibilities(RptRxns) = [];
+Reactions(RptRxns) = [];
+Net.Reversibilities = Reversibilities;
+</pre><h2>Prepare Flux Distribution<a name="7"></a></h2><pre class="codeinput">LB = -1000*Net.Reversibilities;
+UB = 1000*ones(size(Net.S,2),1);
+<span class="comment">% Fluxes taken from Fischer et al. 2004</span>
+GlucoseUptake = 7.1;
+LB(RxnIndex(<span class="string">'PTS'</span>, Net.EnzName)) = .9*GlucoseUptake;     <span class="comment">% Assumine 90% of the glucose uptake goes through PTS</span>
+UB(RxnIndex(<span class="string">'PTS'</span>, Net.EnzName)) = .9*GlucoseUptake;
+LB(RxnIndex(<span class="string">'glk'</span>, Net.EnzName)) = .1*GlucoseUptake;           <span class="comment">% The other 10% goes through glk</span>
+UB(RxnIndex(<span class="string">'glk'</span>, Net.EnzName)) = .1*GlucoseUptake;
+LB(RxnIndex(<span class="string">'EtOH_out'</span>, Net.EnzName)) = .001;           <span class="comment">% Ethanol production</span>
+UB(RxnIndex(<span class="string">'EtOH_out'</span>, Net.EnzName)) = .001;
+LB(RxnIndex(<span class="string">'Acetate_out'</span>, Net.EnzName)) = 6.6;           <span class="comment">% Acetate production</span>
+UB(RxnIndex(<span class="string">'Acetate_out'</span>, Net.EnzName)) = 6.6;
+LB(RxnIndex(<span class="string">'Lactate_out'</span>, Net.EnzName)) = .001;           <span class="comment">% Lactate production</span>
+UB(RxnIndex(<span class="string">'Lactate_out'</span>, Net.EnzName)) = .001;
+LB(RxnIndex(<span class="string">'Biomass1'</span>, Net.EnzName):RxnIndex(<span class="string">'Biomass26'</span>, Net.EnzName)) =  GlucoseUptake*.180*.41;       <span class="comment">% Growth rate  = GlucoseUptake*GlucoseMW*BiomassYield</span>
+UB(RxnIndex(<span class="string">'Biomass1'</span>, Net.EnzName):RxnIndex(<span class="string">'Biomass26'</span>, Net.EnzName)) =  GlucoseUptake*.180*.41;
+LB(RxnIndex(<span class="string">'RXN-5822'</span>, Net.EnzName)) = 0;                     <span class="comment">%NADP Phosphatase can be neglected</span>
+UB(RxnIndex(<span class="string">'RXN-5822'</span>, Net.EnzName)) = 0;
+LB(RxnIndex(<span class="string">'ISOCIT-CLEAV-RXN'</span>, Net.EnzName)) = 0;                     <span class="comment">%The glyoxylate bypass was found inactive</span>
+UB(RxnIndex(<span class="string">'ISOCIT-CLEAV-RXN'</span>, Net.EnzName)) = 0;
+
+Aeq = zeros(9,length(LB));
+Beq = zeros(9,1);
+
+<span class="comment">% Reverse reactions</span>
+Aeq(3,[RxnIndex(<span class="string">'F16BDEPHOS-RXN'</span>, Net.EnzName), RxnIndex(<span class="string">'6PFRUCTPHOS-RXN'</span>, Net.EnzName)]) = [95 -5];           <span class="comment">% fbp:pfk = 5:95</span>
+Aeq(4,[RxnIndex(<span class="string">'PEPDEPHOS-RXN'</span>, Net.EnzName), RxnIndex(<span class="string">'PEPSYNTH-RXN'</span>, Net.EnzName)]) = [5 95];         <span class="comment">% pyk:pps = 95:5</span>
+Aeq(7,[RxnIndex(<span class="string">'R601-RXN'</span>, Net.EnzName), RxnIndex(<span class="string">'SUCCINATE-DEHYDROGENASE-UBIQUINONE-RXN'</span>, Net.EnzName)]) = [-2 1];          <span class="comment">%frd:sdh = 1:2</span>
+
+<span class="comment">% Parallel reactions</span>
+Aeq(5,[RxnIndex(<span class="string">'MALATE-DEH-RXN'</span>, Net.EnzName), RxnIndex(<span class="string">'MALATE-DEHYDROGENASE-ACCEPTOR-RXN'</span>, Net.EnzName)]) = [1 -1];            <span class="comment">% mdh:mqo = 1:1</span>
+Aeq(6,[RxnIndex(<span class="string">'PPENTOMUT-RXN'</span>, Net.EnzName), RxnIndex(<span class="string">'PRPPSYN-RXN'</span>, Net.EnzName)]) = [1 1];          <span class="comment">% prs:deoB (In His Pwy ATP-&gt;AMP:2ATP-&gt;2ADP) = 1:1     PRPPSYN</span>
+Aeq(8,[RxnIndex(<span class="string">'NAD-SYNTH-GLN-RXN'</span>, Net.EnzName), RxnIndex(<span class="string">'NAD-SYNTH-NH3-RXN'</span>, Net.EnzName)]) = [5 -95];         <span class="comment">%nadE(Glu):nadE(NH4) = 95:5</span>
+Aeq(9,[RxnIndex(<span class="string">'PYRUVDEH-RXN'</span>, Net.EnzName), RxnIndex(<span class="string">'PYRUVFORMLY-RXN'</span>, Net.EnzName)]) = [5 -95];         <span class="comment">%pdh:pfl = 95:5</span>
+
+Aeq = [Aeq; Net.S];
+Beq = [Beq; zeros(size(Net.S,1),1)];
+
+<span class="comment">% Minimize repiration for semi-aerobic condition</span>
+f = zeros(length(LB), 1);
+f(RxnIndex(<span class="string">'CITSYN-RXN'</span>, Net.EnzName)) = 1;
+x = linprog(f,[],[],Aeq,Beq,LB,UB,[],optimoptions(<span class="string">'linprog'</span>,<span class="string">'MaxIter'</span>,10000));
+Net.Vref = x;
+</pre><pre class="codeoutput">Optimization terminated.
+</pre><h2>Remove Rxns Without Flux<a name="8"></a></h2><pre class="codeinput">Net.S(:,abs(Net.Vref)&lt;1e-10) = [];
+Net.Sreg(:,abs(Net.Vref)&lt;1e-10) = [];
+Net.EnzName(abs(Net.Vref)&lt;1e-10) = [];
+Net.Reversibilities(abs(Net.Vref)&lt;1e-10) = [];
+Reactions(abs(Net.Vref)&lt;1e-10) = [];
+Net.Vref(abs(Net.Vref)&lt;1e-10) = [];
+</pre><h2>Remove Metabolites Without Rxns<a name="9"></a></h2><pre class="codeinput">EmptyMets =  find(sum(abs(Net.S),2) == 0);
+Net.S(EmptyMets,:) = [];
+Net.Sreg(EmptyMets,:) = [];
+Net.MetabName(EmptyMets) = [];
+</pre><h2>Specify Inlet Rxns<a name="10"></a></h2><pre class="codeinput">InletRxns = {<span class="string">'PTS'</span>; <span class="string">'glk'</span>; <span class="string">'PTS_r'</span>};
+Net.Vin_index = [];
+<span class="keyword">for</span> n=1:length(InletRxns),
+    Net.Vin_index = [Net.Vin_index; RxnIndex(InletRxns{n}, Net.EnzName)];
+<span class="keyword">end</span>
+</pre><h2>Specify Outlet Rxns<a name="11"></a></h2><pre class="codeinput">OutletRxns = {<span class="string">'EtOH_out'</span>; <span class="string">'Acetate_out'</span>; <span class="string">'Lactate_out'</span>};
+<span class="keyword">for</span> n=1:26,
+    OutletRxns = [OutletRxns; strcat(<span class="string">'Biomass'</span>, num2str(n))];
+<span class="keyword">end</span>
+Net.Vout_index= [];
+<span class="keyword">for</span> n=1:length(OutletRxns),
+    Net.Vout_index = [Net.Vout_index; RxnIndex(OutletRxns{n}, Net.EnzName)];
+<span class="keyword">end</span>
+
+save(<span class="string">'SampleCellWideModel'</span>, <span class="string">'Net'</span>, <span class="string">'Reactions'</span>)
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% List the pathways or reactions to be considered:
+Pathways = {
+    'GLYCOLYSIS-TCA-GLYOX-BYPASS'; 
+    'MALIC-NADP-RXN'; 
+    'PEPCARBOX-RXN';
+    'PENTOSE-P-PWY';
+    'GLUTSYNIII-PWY';
+    'GLNSYN-PWY';
+    'PWY0-781';
+    'ASPARAGINESYN-PWY';
+    'PROSYN-PWY';
+    'SER-GLYSYN-PWY';
+    'CYSTSYN-PWY';
+    'BRANCHED-CHAIN-AA-SYN-PWY';
+    'VALINE-PYRUVATE-AMINOTRANSFER-RXN';
+    'PWY0-661';
+    'PWY0-662';
+    'PWY0-162';
+    'HISTSYN-PWY';
+    'PWY-6123';
+    'PWY-6122';
+    'PWY-7221';
+    'PWY-7219';
+    'COMPLETE-ARO-PWY';
+    'ARGSYN-PWY';
+    'NADPHOS-DEPHOS-PWY';
+    'FERMENTATION-PWY';
+    'RXN-8899';
+    };
+
+
+%% Recursively obtain the list of reactions
+Rxns = {};
+PathwayNames = {};
+Rxn2Pathway = [];
+for n=1:length(Pathways),
+    [PathwayNames{n}, SubRxns] = ParsePathway(Pathways{n});
+    if ~isempty(SubRxns),
+        Rxns = [Rxns; SubRxns];
+        Rxn2Pathway = [Rxn2Pathway; n.*ones(length(SubRxns),1)];
+    else
+        Rxns = [Rxns; Pathways{n}];
+        PathwayNames{n} = '';
+        Rxn2Pathway = [Rxn2Pathway; n];
+    end
+end
+
+[Rxns, ind,~] = unique(Rxns);
+Rxn2Pathway = Rxn2Pathway(ind);
+
+%% Obtain reaction information for every reaction
+Reactions = repmat(ReactionInformation, length(Rxns),1);
+Metabolites = {};
+for  n=1:length(Rxns),
+    [ Reactions(n).dG0, Reactions(n).Reversible, Reactions(n).Metabolites, Reactions(n).Stoichiometry, ...
+        Reactions(n).EnzymeNames, Reactions(n).Regulators, Reactions(n).RegulationType, Reactions(n).CommonName ] = ReactionInfo( Rxns{n} );
+    Reactions(n).Pathway = PathwayNames{Rxn2Pathway(n)};
+    Metabolites = [Metabolites; Reactions(n).Metabolites];
+end
+Metabolites = unique(Metabolites);
+    
+
+
+%% Add your own reactions
+%Add PTS reaction
+Reactions(end+1).Reversible = 0;
+Reactions(end).Metabolites = {'PHOSPHO-ENOL-PYRUVATE';'GLC-6-P'; 'PYRUVATE'};
+Reactions(end).Stoichiometry = [-1; 1; 1];
+Reactions(end).EnzymeNames = {'PTS'};
+Reactions(end).CommonName = 'PTS';
+Rxns = [Rxns; 'PTS'];
+
+%Add glk reaction
+Reactions(end+1).Reversible = 0;
+Reactions(end).Metabolites = {'ATP';'GLC-6-P'; 'ADP'};
+Reactions(end).Stoichiometry = [-1; 1; 1];
+Reactions(end).EnzymeNames = {'glk'};
+Reactions(end).CommonName = 'glk';
+Rxns = [Rxns; 'glk'];
+
+%Add Ethanol transport reaction
+Reactions(end+1).Reversible = 0;
+Reactions(end).Metabolites = {'ETOH'};
+Reactions(end).Stoichiometry = [-1];
+Reactions(end).EnzymeNames = {'EtOH_out'};
+Reactions(end).CommonName = 'Ethanol Output';
+Rxns = [Rxns; 'EtOH_out'];
+
+%Add Acetate transport reaction
+Reactions(end+1).Reversible = 0;
+Reactions(end).Metabolites = {'ACET'};
+Reactions(end).Stoichiometry = [-1];
+Reactions(end).EnzymeNames = {'Acetate_out'};
+Reactions(end).CommonName = 'Acetate Output';
+Rxns = [Rxns; 'Acetate_out'];
+
+%Add Lactate transport reaction
+Reactions(end+1).Reversible = 0;
+Reactions(end).Metabolites = {'D-LACTATE'};
+Reactions(end).Stoichiometry = [-1];
+Reactions(end).EnzymeNames = {'Lactate_out'};
+Reactions(end).CommonName = 'Lactate Output';
+Rxns = [Rxns; 'Lactate_out'];
+
+%Respiration
+Reactions(end+1).Reversible = 0;
+Reactions(end).Metabolites = {'NADH'; 'ADP'; 'NAD'; 'ATP'};
+Reactions(end).Stoichiometry = [-1; -2.5; 1; 2.5];
+Reactions(end).EnzymeNames = {'CollapsedRespiration'};
+Reactions(end).CommonName = 'Summarized Respiration';
+Rxns = [Rxns; 'CollapsedRespiration'];
+
+
+
+%Independent Outlet For Biomass: From Feist et al. 2007
+BiomassComponents = {{'GLT'}; {'GLN'}; {'L-ASPARTATE'}; {'ASN'}; {'PRO'}; {'SER'}; {'GLY'}; {'CYS'}; {'LEU'}; {'VAL'}; {'L-ALPHA-ALANINE'}; ...
+    {'THR'}; {'ILE'}; {'HIS'}; {'MET'}; {'LYS'}; {'TYR'}; {'PHE'}; {'TRP'}; {'ARG'}; {'UTP'}; {'CTP'}; {'GTP'}; {'ATP'}; {'NAD'}; {'NADP'}};
+Coefficients = [-0.263; -0.263;-0.241;-0.241;-0.221;-0.216;-0.612;-0.092;-0.451;-0.423;-0.514;-0.254;-0.291;-0.095;-0.154;-0.343;-0.138;-0.185;-0.057;-0.296;-0.144;-0.134;-0.215;-0.174;-0.001831;-0.000447;];
+for n=1:length(BiomassComponents),
+    Reactions(end+1).Reversible = 0;
+    Reactions(end).Metabolites = {BiomassComponents{n}};
+    Reactions(end).Stoichiometry = [Coefficients(n)];
+    Reactions(end).EnzymeNames = {strcat('Biomass', num2str(n))};
+    Reactions(end).CommonName = strjoin(BiomassComponents{n}, 'to Biomass');
+    Reactions(end).Pathway = 'Biomass Output Reactions';
+    Rxns = [Rxns; strcat('Biomass', num2str(n))];
+end
+
+
+%% Prepare Input variables
+S = [];
+Sreg = [];
+Reversibilities = [];
+EnzymeNames = Rxns;
+for n=1:length(Reactions),
+    S = [S zeros(length(Metabolites),1)];
+    Sreg = [Sreg zeros(length(Metabolites),1)];
+    Reversibilities = [Reversibilities; Reactions(n).Reversible];
+    for m=1:length(Reactions(n).Metabolites),
+        S((strcmp(Reactions(n).Metabolites{m}, Metabolites)),end) = Reactions(n).Stoichiometry(m);
+    end
+    for nn=1:length(Reactions(n).EnzymeNames),
+        for m=1:length(Reactions(n).Regulators{nn}),
+            Sreg((strcmp(Reactions(n).Regulators{nn}{m}, Metabolites)),end) = Reactions(n).RegulationType{nn}(m);
+        end
+    end
+    
+end
+
+Net.S = S;
+Net.Sreg = Sreg;
+Net.MetabName = Metabolites;
+Net.EnzName = EnzymeNames;
+
+%% Modify the model as suitable for your purpose
+%For simplicity, quinones can be represented as 1.5 ATP
+%For simplicity, thioredoxin can be substituted by NADPH
+%For simplicity NAD-P-OR-NOP choose NADP. Later this could be expanded to use both substrates
+Substitutions = {{1} {'|Menaquinones|'} {'='} {1.5} {'ADP'}; ...
+                 {1} {'|Menaquinols|'} {'='} {1.5} {'ATP'}; ...
+                 %{1} {'|Oxidized-NrdH-Proteins|'} {'='} {1.5} {'ADP'}; ...
+                 %{1} {'|Reduced-NrdH-Proteins|'} {'='} {1.5} {'ATP'}; ...
+                 %{1} {'|Oxidized-flavodoxins|'} {'='} {1.5} {'ADP'}; ...
+                 %{1} {'|Reduced-flavodoxins|'} {'='} {1.5} {'ATP'}; ...
+                 {1} {'|Quinones|'} {'='} {1.5} {'ADP'}; ...
+                 {1} {'|Reduced-Quinones|'} {'='} {1.5} {'ATP'}; ...
+                 {1} {'|Ubiquinones|'} {'='} {1.5} {'ADP'}; ...
+                 {1} {'|Ubiquinols|'} {'='} {1.5} {'ATP'}; ...
+                 %{1} {'|Ox-Thioredoxin|'} {'='} {1.5} {'NADP'}; ...
+                 %{1} {'|Red-Thioredoxin|'} {'='} {1.5} {'NADPH'}; ...
+                 {1} {'NAD-P-OR-NOP'} {'='} {1} {'NADP'}; ...
+                 {1} {'NADH-P-OR-NOP'} {'='} {1} {'NADPH'}; ...
+%                  {1} {'|Acceptor|'} {'='} {1} {'NADP'}; ...
+%                  {1} {'|Donor-H2|'} {'='} {1} {'NADPH'}; ...
+                 };
+for n=1:size(Substitutions,1),
+    Met1 = find(strcmp(Substitutions{n,2}, Net.MetabName));
+    Met2 = find(strcmp(Substitutions{n,5}, Net.MetabName));
+    Net.S(Met2,:) = Net.S(Met2,:)+(Substitutions{n,4}{1}/Substitutions{n,1}{1}).*Net.S(Met1,:);
+    Net.S(Met1,:) = [];
+    Net.Sreg(Met1,:) = [];
+    Net.MetabName(Met1) = [];
+end
+    
+    
+%Remove negligible metabolites
+VetoedClasses = {'Cofactors';
+                 'Vitamins';
+                 'Ions';
+                 'Salts';
+                 'Inorganic-Compounds';
+                 'THF-Derivatives';
+                 };
+NegligibleMetabolites = [];
+for n=1:length(Net.MetabName),
+    [BadClass, CarbonCount, NitrogenCount] = CompoundChecker(strrep(Net.MetabName{n}, '|', ''), VetoedClasses); % There seems to be an incosistency in the database where -GLU-N does not appear in compounds
+    if BadClass==1 || CarbonCount==0 || (CarbonCount==1&&NitrogenCount==0),
+        NegligibleMetabolites = [NegligibleMetabolites; n];
+    end
+end
+                 
+Net.S(NegligibleMetabolites,:) = [];
+Net.MetabName(NegligibleMetabolites) = [];
+Net.Sreg(NegligibleMetabolites,:) = [];
+
+% Remove empty or repeated rxns
+EmptyRxns =  find(sum(abs(Net.S),1) == 0);
+Net.S(:,EmptyRxns) = [];
+Net.Sreg(:,EmptyRxns) = [];
+Net.EnzName(EmptyRxns) = [];
+Reactions(EmptyRxns) = [];
+Reversibilities(EmptyRxns) = [];
+[~, Unq, ~] = unique(Net.S', 'rows');
+RptRxns = logical(ones(size(Net.S,2),1));
+RptRxns(Unq) = 0;
+Net.S(:,RptRxns) = [];
+Net.Sreg(:,RptRxns) = [];
+Net.EnzName(RptRxns) = [];
+Reversibilities(RptRxns) = [];
+Reactions(RptRxns) = [];
+Net.Reversibilities = Reversibilities;
+
+%% Prepare Flux Distribution
+LB = -1000*Net.Reversibilities;
+UB = 1000*ones(size(Net.S,2),1);
+% Fluxes taken from Fischer et al. 2004
+GlucoseUptake = 7.1;
+LB(RxnIndex('PTS', Net.EnzName)) = .9*GlucoseUptake;     % Assumine 90% of the glucose uptake goes through PTS 
+UB(RxnIndex('PTS', Net.EnzName)) = .9*GlucoseUptake;
+LB(RxnIndex('glk', Net.EnzName)) = .1*GlucoseUptake;           % The other 10% goes through glk
+UB(RxnIndex('glk', Net.EnzName)) = .1*GlucoseUptake;
+LB(RxnIndex('EtOH_out', Net.EnzName)) = .001;           % Ethanol production
+UB(RxnIndex('EtOH_out', Net.EnzName)) = .001;
+LB(RxnIndex('Acetate_out', Net.EnzName)) = 6.6;           % Acetate production
+UB(RxnIndex('Acetate_out', Net.EnzName)) = 6.6;
+LB(RxnIndex('Lactate_out', Net.EnzName)) = .001;           % Lactate production
+UB(RxnIndex('Lactate_out', Net.EnzName)) = .001;
+LB(RxnIndex('Biomass1', Net.EnzName):RxnIndex('Biomass26', Net.EnzName)) =  GlucoseUptake*.180*.41;       % Growth rate  = GlucoseUptake*GlucoseMW*BiomassYield
+UB(RxnIndex('Biomass1', Net.EnzName):RxnIndex('Biomass26', Net.EnzName)) =  GlucoseUptake*.180*.41;
+LB(RxnIndex('RXN-5822', Net.EnzName)) = 0;                     %NADP Phosphatase can be neglected
+UB(RxnIndex('RXN-5822', Net.EnzName)) = 0;              
+LB(RxnIndex('ISOCIT-CLEAV-RXN', Net.EnzName)) = 0;                     %The glyoxylate bypass was found inactive
+UB(RxnIndex('ISOCIT-CLEAV-RXN', Net.EnzName)) = 0;
+
+Aeq = zeros(9,length(LB));
+Beq = zeros(9,1);
+
+% Reverse reactions
+Aeq(3,[RxnIndex('F16BDEPHOS-RXN', Net.EnzName), RxnIndex('6PFRUCTPHOS-RXN', Net.EnzName)]) = [95 -5];           % fbp:pfk = 5:95
+Aeq(4,[RxnIndex('PEPDEPHOS-RXN', Net.EnzName), RxnIndex('PEPSYNTH-RXN', Net.EnzName)]) = [5 95];         % pyk:pps = 95:5
+Aeq(7,[RxnIndex('R601-RXN', Net.EnzName), RxnIndex('SUCCINATE-DEHYDROGENASE-UBIQUINONE-RXN', Net.EnzName)]) = [-2 1];          %frd:sdh = 1:2
+
+% Parallel reactions
+Aeq(5,[RxnIndex('MALATE-DEH-RXN', Net.EnzName), RxnIndex('MALATE-DEHYDROGENASE-ACCEPTOR-RXN', Net.EnzName)]) = [1 -1];            % mdh:mqo = 1:1
+Aeq(6,[RxnIndex('PPENTOMUT-RXN', Net.EnzName), RxnIndex('PRPPSYN-RXN', Net.EnzName)]) = [1 1];          % prs:deoB (In His Pwy ATP->AMP:2ATP->2ADP) = 1:1     PRPPSYN
+Aeq(8,[RxnIndex('NAD-SYNTH-GLN-RXN', Net.EnzName), RxnIndex('NAD-SYNTH-NH3-RXN', Net.EnzName)]) = [5 -95];         %nadE(Glu):nadE(NH4) = 95:5
+Aeq(9,[RxnIndex('PYRUVDEH-RXN', Net.EnzName), RxnIndex('PYRUVFORMLY-RXN', Net.EnzName)]) = [5 -95];         %pdh:pfl = 95:5
+
+Aeq = [Aeq; Net.S];
+Beq = [Beq; zeros(size(Net.S,1),1)];
+
+% Minimize repiration for semi-aerobic condition
+f = zeros(length(LB), 1);
+f(RxnIndex('CITSYN-RXN', Net.EnzName)) = 1;
+x = linprog(f,[],[],Aeq,Beq,LB,UB,[],optimoptions('linprog','MaxIter',10000));
+Net.Vref = x;
+
+
+%% Remove Rxns Without Flux
+Net.S(:,abs(Net.Vref)<1e-10) = [];
+Net.Sreg(:,abs(Net.Vref)<1e-10) = [];
+Net.EnzName(abs(Net.Vref)<1e-10) = [];
+Net.Reversibilities(abs(Net.Vref)<1e-10) = [];
+Reactions(abs(Net.Vref)<1e-10) = [];
+Net.Vref(abs(Net.Vref)<1e-10) = [];
+
+
+%% Remove Metabolites Without Rxns
+EmptyMets =  find(sum(abs(Net.S),2) == 0);
+Net.S(EmptyMets,:) = [];
+Net.Sreg(EmptyMets,:) = [];
+Net.MetabName(EmptyMets) = [];
+
+%% Specify Inlet Rxns
+InletRxns = {'PTS'; 'glk'; 'PTS_r'};
+Net.Vin_index = [];
+for n=1:length(InletRxns),
+    Net.Vin_index = [Net.Vin_index; RxnIndex(InletRxns{n}, Net.EnzName)];
+end
+
+%% Specify Outlet Rxns
+OutletRxns = {'EtOH_out'; 'Acetate_out'; 'Lactate_out'};
+for n=1:26,
+    OutletRxns = [OutletRxns; strcat('Biomass', num2str(n))];
+end
+Net.Vout_index= [];
+for n=1:length(OutletRxns),
+    Net.Vout_index = [Net.Vout_index; RxnIndex(OutletRxns{n}, Net.EnzName)];
+end
+          
+save('SampleCellWideModel', 'Net', 'Reactions')
+
+
+##### SOURCE END #####
+--></body></html>
