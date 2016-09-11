@@ -18,17 +18,7 @@ Fig 3)
 	-Fig 3D = Figure 11
 	-Fig 3E = Figure 5
 
-Fig 4) 
-- Navigate to the ToyModel subfolder. Type 'SimpLaunch_Glyc' on the MATLAB command line and press enter.
-- A file of the form 'FinalSimpGlycKAF_SeveralPerturbations_1Models_YYYYMMDD_HHMMSS.mat' is generated.
-- Paste the file name into the indicated line of 'GlycStuffPlotter.m' (line 2). Save m-file.
-- Type 'GlycStuffPlotter' on the MATLAB command line and press enter.
-- 5 Figures are generated:
-	- Fig 4A = Figure 4
-	- Fig 4B = Figure 1
-	- Fig 4C = Figure 5
-
-Fig 5)
+Fig 4 (Old figure 5)
 - Navigate to the EMRA subfolder. Type 'SimpLaunch_Glyc' on the MATLAB command line and press enter.
 - NOTE: This process may take days if it is not multithreaded. On a single core system, expect long runtimes.
 - FOR access to a sample result file, email:mtheisen@ucla.edu
@@ -37,6 +27,8 @@ Fig 5)
 - Type 'IsobutanolYieldsNoScreeningMedQuarts' on the MATLAB command line and press enter.
 - Figure generated is Fig 5B.
 - Fig 5A is freehand in PowerPoint.
+
+Fig 5) Freehand in powerpoint
 
 TO GENERATE MODELS:
 - Navigate to BuildingModel subfolder. Type 'MainModelMaker' on the MATLAB command line and press enter.
