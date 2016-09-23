@@ -18,7 +18,7 @@ tic
 % 
 % matlabpool open 39
 % pctRunOnAll warning off all
-MainAddFlux('Revision2',100,'SeveralPerturbations',ModeOpts)
+MainAddFlux('Revision2',1000,'SeveralPerturbations',ModeOpts)
 matlabpool close
 toc
 %EmailSender('lafonj@gmail.com','SimulationDone','Finished',[])

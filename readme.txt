@@ -19,7 +19,7 @@ Fig 3)
 	-Fig 3E = Figure 5
 
 Fig 4 (Old figure 5)
-- Navigate to the EMRA subfolder. Type 'SimpLaunch_Glyc' on the MATLAB command line and press enter.
+- Navigate to the EMRA subfolder. Type 'IsobutanolPredictionModeOptsPreparation' on the MATLAB command line and press enter.
 - NOTE: This process may take days if it is not multithreaded. On a single core system, expect long runtimes.
 - FOR access to a sample result file, email:mtheisen@ucla.edu
 - A file of the form 'Revision2_SeveralPerturbations_1000Models_YYYYMMDD_HHMMSS.mat' is generated.
